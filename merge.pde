@@ -2,91 +2,72 @@ import java.util.Random;
 import java.lang.Math.*;
 
 
-int size = 800;
-int range = 100;
-int [] array;// main unordered array (to be sorted)
+int [] array; // main unordered array (to be sorted)
+int [] aux_array; // used for animation
+int [] swaps; // saves all swaps made in quicksort (also for animation)
+int swap_iterator;
+
+int debug = 0;
+int ordering;
+
+
+// SETUP
 
 void setup() {
    size(800, 600); // screen size
    
-   array = new int[size];
-   
-   Random rand = new Random();
+   array = new int[width];
+   aux_array = new int[width];
+   swaps = new int[width * width];
+   swap_iterator = 0;
+   ordering = 1;
 
    for (int i = 0; i < width; i++) {
        array[i] = int(random(height));
+       aux_array[i] = array[i];
    }
    
-   for (int i = 0; i < size; i++) {
-       System.out.println(array[i]);
+   if (debug == 1) {
+       for (int i = 0; i < width; i++) {
+         System.out.println(array[i]);
+       }
    }
    
-   //mergeSort(array, size);
-   quickSort(array, 0, size - 1);
    
-   for (int i = 0; i < size; i++) {
-       System.out.println(array[i]);
+   quickSort(array, 0, width - 1);
+   
+   if (debug == 1){
+       for (int i = 0; i < width; i++) {
+         System.out.println(array[i]);
+       }
    }
+   
+   for (int i = 0; i < swaps.length; i+=2) {
+       print(swaps[i]);
+       print("  -  ");
+       println(swaps[i+1]);
+   }
+   
+   ordering = 0;
+   swap_iterator = 0;
+   
 }
+
+
+// RENDER
 
 void draw() {
     background(0);
-    for(int i = 0; i < array.length; i++) {
+    for(int i = 0; i < aux_array.length; i++) {
         stroke(255);
-        line(i, height, i, height - array[i]);
+        line(i, height, i, height - aux_array[i]);
     }
+    swap(aux_array, swaps[swap_iterator], swaps[swap_iterator + 1]);
+    swap_iterator += 2;
 }
 
 
-// merge sort 
-
-// merging function
-void merge(int[] array, int[] l_partition, int[] r_partition, int median, int last_index) {
- 
-    int i = 0, j = 0, k = 0;
-    while (i < median && j < last_index) {
-        if (l_partition[i] <= r_partition[j]) {
-            array[k++] = l_partition[i++];
-        }
-        else {
-            array[k++] = r_partition[j++];
-        }
-    }
-    while (i < median) {
-        array[k++] = l_partition[i++];
-    }
-    while (j < last_index) {
-        array[k++] = r_partition[j++];
-    }
-}
-
-// recursive main function
-void mergeSort(int[] array, int n) {
-    if (n < 2) {
-        return;
-    }
-    int mid = n / 2;
-    int[] l = new int[mid]; // l_partition
-    int[] r = new int[n - mid]; // r_partition
-
-    // copying main array into auxiliar arrays
-    for (int i = 0; i < mid; i++) {
-        l[i] = array[i];
-    }
-    for (int i = mid; i < n; i++) {
-        r[i - mid] = array[i];
-    }
-    
-    // recursive calls (divide the processing in two)
-    mergeSort(l, mid);
-    mergeSort(r, n - mid);
-
-    // merging call
-    merge(array, l, r, mid, n - mid);
-}
-
-
-// quick sort
+// QUICKSORT 
 
 private void quickSort(int[] array, int left, int right) {
   if(right > left) {
@@ -128,4 +109,13 @@ private void swap(int[] array, int i, int j) {
     int temp = array[i];
     array[i] = array[j];
     array[j] = temp;
+    if (ordering == 1) {
+        swaps[swap_iterator] = i;
+        swap_iterator++;
+        swaps[swap_iterator] = j;
+        swap_iterator++;
+    }
+    
+
+    
 }
