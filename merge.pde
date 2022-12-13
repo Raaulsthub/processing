@@ -42,12 +42,6 @@ void setup() {
        }
    }
    
-   for (int i = 0; i < swaps.length; i+=2) {
-       print(swaps[i]);
-       print("  -  ");
-       println(swaps[i+1]);
-   }
-   
    ordering = 0;
    swap_iterator = 0;
    
@@ -59,11 +53,31 @@ void setup() {
 void draw() {
     background(0);
     for(int i = 0; i < aux_array.length; i++) {
+        fill(255);
         stroke(255);
         line(i, height, i, height - aux_array[i]);
     }
     swap(aux_array, swaps[swap_iterator], swaps[swap_iterator + 1]);
     swap_iterator += 2;
+    
+    // borders
+    fill(205,133,63);
+    stroke(222,184,135);
+    rect(0, 0, width, 30);
+    rect(0, 0, 30, height);
+    rect(width - 30, 0, width, height);
+    rect(0, height - 30, width, height);
+    fill(139,69,19);
+    rect(0, 0, width, 20);
+    rect(0, 0, 20, height);
+    rect(width - 20, 0, width, height);
+    rect(0, height - 20,  width, height);
+    fill(128,0,0);
+    rect(0, 0, width, 10);
+    rect(0, 0, 10, height);
+    rect(width - 10, 0, width, height);
+    rect(0, height - 10, width, height);
+    
 }
 
 
